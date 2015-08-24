@@ -1,5 +1,5 @@
 /**************************************
-* String Matching Content Length v0.5
+* String Matching Content Length v1.0
 **************************************/
 
 #include<stdio.h>
@@ -9,6 +9,7 @@
 char a[2101];
 char b[2101];
 char dp[2100][2100];
+char dp1[2100][2100];
 char ff[2100][2100];
 
 int main(void)
@@ -42,14 +43,16 @@ int main(void)
         for (i_b=1; i_b<=len_b; i_b++)
         {
             dp[i_a][i_b] = max(dp[i_a-1][i_b], dp[i_a][i_b-1]);
-            
             if (ff[i_a][i_b] >= 3)
             {
-                for (j=3; j<=ff[i_a][i_b]; j++)
+                dp[i_a][i_b] = max(dp[i_a][i_b], dp1[i_a-3][i_b-3] + 3);
+                if (ff[i_a][i_b] > 3)
                 {
-                    dp[i_a][i_b] = max(dp[i_a][i_b], dp[i_a-j][i_b-j] + j);
+                    dp[i_a][i_b] = max(dp[i_a][i_b], dp[i_a-1][i_b-1] + 1);
                 }
             }
+            dp1[i_a][i_b] = max(dp1[i_a-1][i_b], dp1[i_a][i_b-1]);
+            dp1[i_a][i_b] = max(dp1[i_a][i_b], dp[i_a][i_b]);
             // printf("dp %2d %2d %d\n", i_a, i_b, dp[i_a][i_b]);
         }
     }
