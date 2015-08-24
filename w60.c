@@ -1,62 +1,61 @@
 /**************************************
-* String Matching Content Length
+* String Matching Content Length v0.5
 **************************************/
 
 #include<stdio.h>
 #include<string.h>
+#define max(a, b) a>b?a:b
 
 char a[2101];
 char b[2101];
-int smcl;
+char dp[2000][2000];
+char ff[2000][2000];
 
 int main(void)
 {
-    int ia, ib;
-    int iia, iib;
     int len_a, len_b;
-    int node_b;
-    int len_sub;
+    int i_a, i_b;
+    int j;
     
     scanf("%s%s", a, b);
     len_a = strlen(a);
     len_b = strlen(b);
     
-    smcl = 0;
-    ia = 0;
-    node_b = 0;
-    
-    while (ia<len_a-2)
+    for (i_a=1; i_a<=len_a; i_a++)
     {
-        len_sub = 0;
-        ib = node_b;
-        while (ib<len_b-2)
+        for (i_b=1; i_b<=len_b; i_b++)
         {
-            if (a[ia] == b[ib] && a[ia+1] == b[ib+1] && a[ia+2] == b[ib+2])
+            if (a[i_a-1] == b[i_b-1])
             {
-                len_sub += 3;
-                iia = ia + 3;
-                iib = ib + 3;
-                while (a[iia] == b[iib] && iia < len_a && iib < len_b)
-                {
-                    iia++;
-                    iib++;
-                    len_sub++;
-                }
-                // printf("[ia]%d [ib]%d Found %d\n", ia, ib, len_sub);
-                ia += len_sub-1;
-                ib += len_sub;
-                node_b = ib;
-                smcl += len_sub;
-                break;
+                ff[i_a][i_b] = ff[i_a-1][i_b-1] + 1;
             }
             else
             {
-                // printf("[ia]%d [ib]%d Not found\n", ia, ib);
-                ib++;
+                ff[i_a][i_b] = 0;
             }
+            // printf("ff %2d %2d %d\n", i_a, i_b, ff[i_a][i_b]);
         }
-        ia++;
     }
-    printf("%d\n", smcl);
+    
+    for (i_a=1; i_a<=len_a; i_a++)
+    {
+        for (i_b=1; i_b<=len_b; i_b++)
+        {
+            dp[i_a][i_b] = 0;
+            if (ff[i_a][i_b] >= 3)
+            {
+                for (j=3; j<=ff[i_a][i_b]; j++)
+                {
+                    dp[i_a][i_b] = max(dp[i_a][i_b], dp[i_a-j][i_b-j] + j);
+                }
+            }
+            else
+            {
+                dp[i_a][i_b] = max(dp[i_a-1][i_b], dp[i_a][i_b-1]);
+            }
+            // printf("dp %2d %2d %d\n", i_a, i_b, dp[i_a][i_b]);
+        }
+    }
+    printf("%d\n", dp[len_a][len_b]);
     return 0;
 }
