@@ -8,8 +8,8 @@
 
 char a[2101];
 char b[2101];
-char dp[2000][2000];
-char ff[2000][2000];
+char dp[2100][2100];
+char ff[2100][2100];
 
 int main(void)
 {
@@ -41,17 +41,14 @@ int main(void)
     {
         for (i_b=1; i_b<=len_b; i_b++)
         {
-            dp[i_a][i_b] = 0;
+            dp[i_a][i_b] = max(dp[i_a-1][i_b], dp[i_a][i_b-1]);
+            
             if (ff[i_a][i_b] >= 3)
             {
                 for (j=3; j<=ff[i_a][i_b]; j++)
                 {
                     dp[i_a][i_b] = max(dp[i_a][i_b], dp[i_a-j][i_b-j] + j);
                 }
-            }
-            else
-            {
-                dp[i_a][i_b] = max(dp[i_a-1][i_b], dp[i_a][i_b-1]);
             }
             // printf("dp %2d %2d %d\n", i_a, i_b, dp[i_a][i_b]);
         }
