@@ -8,4 +8,5 @@ int main(){
             f[j]=f[j]>(f[j-x]+y)?f[j]:(f[j-x]+y);
     }
     printf("%d\n", f[m]);
+    return 0;
 }
